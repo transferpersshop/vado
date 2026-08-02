@@ -121,7 +121,7 @@
     .stamp .stamp-center { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
     .stamp .stamp-center svg { width: 52%; height: auto; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    .stamp { position: absolute; top: -16%; left: -13%; width: 40%; z-index: 2; }
+    .stamp { position: fixed; top: calc(clamp(1rem, 3.5vw, 2.2rem) + env(safe-area-inset-top)); left: clamp(1rem, 3.5vw, 2.2rem); width: clamp(110px, 16vmin, 160px); z-index: 2; }
 
     .rule {
       width: clamp(60px, 10vw, 90px);
