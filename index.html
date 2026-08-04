@@ -141,7 +141,6 @@
     </div>
     <p class="kicker">Koffiebar &middot; Food &middot; Borrel &mdash; Lochem</p>
     <h1>Tot snel bij VADO</h1>
-    
     <div class="rule"></div>
     <a class="mail" href="mailto:info@vadolochem.nl">info@vadolochem.nl</a>
     <a class="insta" href="https://www.instagram.com/vadolochem" target="_blank" rel="noopener">
@@ -154,16 +153,19 @@
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       var root = document.documentElement, tx = 0, ty = 0, cx = 0, cy = 0;
       window.addEventListener('pointermove', function (e) {
-        tx = (e.clientX / window.innerWidth - .5) * -16;
-        ty = (e.clientY / window.innerHeight - .5) * -16;
+        tx = (e.clientX / window.innerWidth - .5) * -24;
+        ty = (e.clientY / window.innerHeight - .5) * -24;
       });
-      (function tick() {
+      (function tick(now) {
+        var t = (now || 0) / 1000;
+        var dx = Math.sin(t * .11) * 6 + Math.sin(t * .05) * 3;
+        var dy = Math.cos(t * .08) * 6 + Math.sin(t * .06) * 3;
         cx += (tx - cx) * .05;
         cy += (ty - cy) * .05;
-        root.style.setProperty('--bgx', cx.toFixed(2) + 'px');
-        root.style.setProperty('--bgy', cy.toFixed(2) + 'px');
+        root.style.setProperty('--bgx', (dx + cx).toFixed(2) + 'px');
+        root.style.setProperty('--bgy', (dy + cy).toFixed(2) + 'px');
         requestAnimationFrame(tick);
-      })();
+      })(0);
     })();
   </script>
 </body>
