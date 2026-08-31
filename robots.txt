@@ -1,0 +1,7 @@
+# robots.txt — vadolochem.nl
+# Alle zoekmachines mogen de hele site indexeren.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://vadolochem.nl/sitemap.xml
