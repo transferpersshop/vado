@@ -248,6 +248,7 @@
     }
     /* Weekmenu in het bestaande dinerblok "Aan tafel bij VADO", bovenaan de kaart */
     .diner .wk-items, .diner .week-reserve { grid-column: 1 / -1; }
+    .wk-items[hidden] { display: none; }
     .wk-items { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px clamp(16px, 3vw, 40px); margin-top: 16px; }
     .wk-items li { border-top: 1.5px solid rgba(250,79,0,.6); padding-top: 16px; display: grid; gap: 4px; align-content: start; }
     .wk-items .dag { font-family: var(--futura); font-weight: 500; font-size: .9375rem; color: var(--orange-soft); font-variant-numeric: tabular-nums; margin-bottom: 4px; }
@@ -776,14 +777,14 @@
       <h1>Menu</h1>
       <p>Van de eerste koffie tot de laatste borrel. Di en wo tot 16:00, do t/m za tot 23:00 met diner aan tafel.</p>
     </div>
-    <section class="diner" id="diner" aria-labelledby="h-diner" data-tot="2026-11-21T23:00:00+01:00">
-      <p class="when">Donderdag 19 t/m zaterdag 21 november</p>
+    <section class="diner" id="diner" aria-labelledby="h-diner" data-tot="2026-11-28T23:00:00+01:00">
+      <p class="when">Donderdag 26 t/m zaterdag 28 november</p>
       <h2 id="h-diner">Aan tafel bij VADO</h2>
       <p>Van donderdag tot en met zaterdag schuif je bij ons aan voor het diner. Elke dag een wisselend gerecht.</p>
       <ol class="wk-items">
-        <li><p class="dag">Donderdag <time datetime="2026-11-19">19 nov</time></p><h3>Pompoen-aardappelstamppot</h3><p class="oms">Met varkenssaucijs</p></li>
-        <li><p class="dag">Vrijdag <time datetime="2026-11-20">20 nov</time></p><h3>Moqueca</h3><p class="oms">Braziliaanse visstoof</p></li>
-        <li><p class="dag">Zaterdag <time datetime="2026-11-21">21 nov</time></p><h3>Argentijnse biefstukpuntjes</h3><p class="oms">Met chimichurri</p></li>
+        <li><p class="dag">Donderdag <time datetime="2026-11-26">26 nov</time></p><h3>Longhaas</h3><p class="oms">Aardappel-knolselderijpuree, geroosterde wortelen</p></li>
+        <li><p class="dag">Vrijdag <time datetime="2026-11-27">27 nov</time></p><h3>Bacalhau à Gomes de Sá</h3><p class="oms">Traditionele Portugese ovenschotel</p></li>
+        <li><p class="dag">Zaterdag <time datetime="2026-11-28">28 nov</time></p><h3>Spaanse varkenskoontjes</h3><p class="oms">Geroosterde aardappel en zoete aardappel, rode kool met appel</p></li>
       </ol>
       <p class="week-reserve">Reserveren kan via <a href="mailto:info@vadolochem.nl">info@vadolochem.nl</a> of <a href="tel:+31573785287">0573 - 78 52 87</a></p>
     </section>
@@ -874,10 +875,47 @@
     /* Verlopen weekmenu (na zaterdag 23:00): gerechten en datums weg, algemene dinertekst blijft */
     (function () {
       var s = document.getElementById('diner'); if (!s) return;
+      function leeg() { var l = s.querySelector('.wk-items'); if (l) l.hidden = true; var w = s.querySelector('.when'); if (w) w.textContent = 'Donderdag t/m zaterdag'; }
       var tot = Date.parse(s.getAttribute('data-tot') || '');
-      if (!tot || Date.now() <= tot) return;
-      var l = s.querySelector('.wk-items'); if (l) l.remove();
-      var w = s.querySelector('.when'); if (w) w.textContent = 'Donderdag t/m zaterdag';
+      if (tot && Date.now() > tot) leeg();
+      /* Bijwerken met het gepubliceerde weekmenu uit beheer (null = geen menu) */
+      window.vadoWeekmenu = function (info) {
+        /* Geen of ouder menu in beheer: de vaste inhoud hierboven houden (die verloopt zelf via data-tot) */
+        if (!info || Date.parse(info.tot) < Date.parse(s.getAttribute('data-tot') || '')) return;
+        if (Date.now() > Date.parse(info.tot)) return leeg();
+        var el = window.__vadoEl, L = window.__vadoLang, ol = s.querySelector('.wk-items'); ol.textContent = ''; ol.hidden = false;
+        info.items.forEach(function (g) {
+          var li = el('li'), dag = el('p', 'dag', g.naam + ' '), t = el('time', null, g.kort);
+          t.dateTime = g.iso; dag.appendChild(t); li.appendChild(dag); li.appendChild(el('h3', null, g.titel));
+          if (g.ondertitel) li.appendChild(el('p', 'oms', g.ondertitel));
+          ol.appendChild(li);
+        });
+        s.querySelector('.when').textContent = 'Donderdag ' + (info.d.getUTCMonth() === info.z.getUTCMonth() ? info.d.getUTCDate() : L.format(info.d)) + ' t/m zaterdag ' + L.format(info.z);
+        s.setAttribute('data-tot', info.tot);
+      };
+    })();
+  </script>
+  <script>
+    /* Weekmenu live uit beheer.vadolochem.nl. Lukt ophalen niet, dan blijft de vaste inhoud hierboven staan.
+       Alleen-lezen: de publishable key mag publiek zijn, de database staat alleen het gepubliceerde menu toe. */
+    (function () {
+      var SB_URL = 'https://ccjrklmfrtekjmhhnmga.supabase.co', SB_KEY = 'sb_publishable_3bBR3cDbTH2seUI99XouNA__NK7FrxP';
+      if (SB_URL.indexOf('PROJECT_REF') > -1 || !window.fetch) return;
+      var DAG = { 4: 'Donderdag', 5: 'Vrijdag', 6: 'Zaterdag' };
+      var kort = new Intl.DateTimeFormat('nl-NL', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+      var lang = new Intl.DateTimeFormat('nl-NL', { timeZone: 'UTC', day: 'numeric', month: 'long' });
+      function datum(maandag, dag) { var a = maandag.split('-'); return new Date(Date.UTC(+a[0], +a[1] - 1, +a[2] + dag - 1)); }
+      function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst != null) e.textContent = tekst; return e; }
+      fetch(SB_URL + '/rest/v1/rpc/publiek_weekmenu', { method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: '{}', cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (m) {
+          var ok = m && m.gerechten && m.gerechten.length === 3;
+          var info = ok ? { tot: m.tot, d: datum(m.week_start, 4), z: datum(m.week_start, 6),
+                            items: m.gerechten.map(function (g) { var d = datum(m.week_start, g.dag); return { naam: DAG[g.dag], iso: d.toISOString().slice(0, 10), kort: kort.format(d).replace('.', ''), titel: String(g.titel || ''), ondertitel: g.ondertitel ? String(g.ondertitel) : '' }; }) } : null;
+          window.vadoWeekmenu && window.vadoWeekmenu(info);
+        })
+        .catch(function () { /* vaste inhoud blijft staan */ });
+      window.__vadoEl = el; window.__vadoLang = lang;
     })();
   </script>
 </body>

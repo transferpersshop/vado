@@ -302,6 +302,57 @@
     .week-reserve { padding: 12px 0 8px; border-top: 1px solid rgba(58,42,20,.14); font-family: var(--futura); font-weight: 500; font-size: .9375rem; line-height: 1.5; }
     .week-reserve a { white-space: nowrap; border-bottom: 1.5px solid var(--orange); padding-bottom: 1px; transition: color .2s var(--ease, ease); }
     .week-reserve a:hover { color: var(--orange-ink); }
+
+    /* Wijn-spijs pop-up: verschijnt kort na laden, één keer per bezoeker (tot de sluitdatum) */
+    .promo {
+      position: fixed; inset: 0; margin: auto; height: fit-content; padding: 0; border: 0; background: transparent; color: var(--paper);
+      width: min(30rem, calc(100% - 32px)); max-width: none; max-height: calc(100dvh - 32px); overflow: visible;
+    }
+    .promo::backdrop { background: rgba(30,16,12,0); transition: background-color .5s var(--ease); }
+    .promo.is-in::backdrop { background: rgba(30,16,12,.6); }
+    .promo-card {
+      position: relative; overflow-y: auto; max-height: calc(100dvh - 32px); overscroll-behavior: contain;
+      background: var(--roast-2); border: 1.5px solid rgba(243,237,216,.16); border-radius: 12px; box-shadow: 0 30px 70px rgba(0,0,0,.45);
+      padding: 28px 32px 26px; opacity: 0; transform: translateY(14px) scale(.98);
+      transition: opacity .45s var(--ease), transform .55s var(--ease);
+    }
+    .promo.is-in .promo-card { opacity: 1; transform: none; }
+    .promo-card > svg.mark { position: absolute; right: -36px; top: -14px; width: 220px; height: auto; color: var(--azul); opacity: .07; pointer-events: none; }
+    .promo .eyebrow { padding-right: 44px; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .34em; color: var(--orange); }
+    .promo h2 { font-weight: 800; text-transform: uppercase; line-height: .95; letter-spacing: -.01em; font-size: clamp(1.9rem, 6vw, 2.5rem); margin-top: 10px; text-wrap: balance; }
+    .promo .when { font-family: var(--futura); font-weight: 500; font-size: 1rem; color: var(--orange); margin-top: 12px; font-variant-numeric: tabular-nums; }
+    .promo .lead { font-weight: 500; font-size: 1rem; line-height: 1.55; opacity: .9; margin-top: 12px; }
+    .promo-list { list-style: none; margin-top: 16px; border-top: 1px solid rgba(243,237,216,.14); }
+    .promo-list li { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(243,237,216,.1); font-weight: 500; font-size: .95rem; line-height: 1.4; }
+    .promo-list li span:last-child { opacity: .7; text-align: right; }
+    .promo-price { display: flex; align-items: baseline; gap: 10px; margin-top: 16px; font-weight: 800; font-size: 1.6rem; text-transform: uppercase; }
+    .promo-price small { font-weight: 500; font-size: .9rem; text-transform: none; opacity: .7; }
+    .promo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 20px; }
+    .promo-actions .btn { margin: 0; }
+    .promo-later { border: 0; background: none; color: var(--paper); font: inherit; font-weight: 500; font-size: .95rem; opacity: .75; cursor: pointer; border-bottom: 1px solid rgba(243,237,216,.35); padding: 0 0 1px; }
+    .promo-later:hover { opacity: 1; }
+    .promo-close {
+      position: absolute; top: 14px; right: 14px; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+      border: 1.5px solid rgba(243,237,216,.28); background: transparent; color: var(--paper); transition: background-color .2s var(--ease), border-color .2s var(--ease);
+    }
+    .promo-close:hover { background: rgba(243,237,216,.08); border-color: rgba(243,237,216,.5); }
+    .promo-close svg { width: 16px; height: 16px; }
+    .promo button:focus-visible, .promo a:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+    .promo-week li { grid-template-columns: 6.2rem minmax(0, 1fr); gap: 14px; padding: 11px 0; }
+    .promo-week .dag { font-family: var(--futura); font-weight: 500; font-size: .875rem; line-height: 1.45; color: var(--orange); opacity: 1 !important; text-align: left !important; }
+    .promo-week .dag time { display: block; color: var(--paper); opacity: .65; }
+    .promo-week .gerecht { opacity: 1; color: rgba(243,237,216,.72); text-align: left !important; font-size: .9rem; line-height: 1.4; }
+    .promo-week .gerecht b { display: block; font-family: var(--futura); font-weight: 500; font-size: 1.06rem; color: var(--paper); opacity: 1; margin-bottom: 2px; }
+    .promo-week li span:last-child { opacity: 1; }
+    .promo-check li { display: block; position: relative; padding-left: 22px; }
+    .promo-check li::before { content: ""; position: absolute; left: 2px; top: 1em; width: 8px; height: 8px; margin-top: -4px; border-radius: 50%; background: var(--orange); }
+    .promo-note { margin-top: 14px; font-weight: 500; font-size: .9rem; line-height: 1.5; opacity: .85; }
+    .promo-note a { white-space: nowrap; border-bottom: 1.5px solid var(--orange); padding-bottom: 1px; }
+    .promo-note a:hover { color: var(--orange); }
+    .promo:focus, .promo:focus-visible, .promo-card:focus { outline: none; }
+    html:has(.promo[open]) { overflow: hidden; }
+    @media (max-width: 480px) { .promo-card { padding: 24px 20px 20px; } }
+    @media (prefers-reduced-motion: reduce) { .promo-card, .promo::backdrop { transition: none; } }
   </style>
   <script type="application/ld+json">
   {
@@ -370,14 +421,22 @@
       </div>
       <ul class="slides" tabindex="0" aria-label="Instagram-posts, veeg of scroll opzij">
           <li class="slide" aria-roledescription="slide" aria-label="1 van 4">
+            <a href="https://www.instagram.com/vadolochem/" target="_blank" rel="noopener">
+              <span class="shot"><img src="ig-wijn-spijs.jpg" alt="Twee flessen wijn en wijnglazen op een houten tafel bij VADO, met de tekst ‘Wijn-spijs beleving, zondag 29 november’." width="510" height="738" style="object-position:50% 40%" loading="eager"><span class="badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Reel</span></span>
+              <span class="meta">29 november</span>
+              <strong>Wijn-spijs beleving</strong>
+              <span class="txt">Bubbels, 8 wijnen en 3 bijpassende hapjes, met wijnkenners Anne en Willem.</span>
+            </a>
+          </li>
+          <li class="slide" aria-roledescription="slide" aria-label="2 van 4">
             <a href="https://www.instagram.com/vadolochem/p/DfmQ0X9R-PG/" target="_blank" rel="noopener">
-              <span class="shot"><img src="ig-leesavond.jpg" alt="Twee cappuccino’s op een stapel boeken, met de tekst ‘Laatste info leesavond 11/11’." width="480" height="640" style="object-position:50% 50%" loading="eager"></span>
+              <span class="shot"><img src="ig-leesavond.jpg" alt="Twee cappuccino’s op een stapel boeken, met de tekst ‘Laatste info leesavond 11/11’." width="480" height="640" style="object-position:50% 50%" loading="lazy"></span>
               <span class="meta">11 november</span>
               <strong>Eerste leesavond</strong>
               <span class="txt">Inloop, een uur lezen in stilte en nakletsen, met boekentips van Jonina.</span>
             </a>
           </li>
-          <li class="slide" aria-roledescription="slide" aria-label="2 van 4">
+          <li class="slide" aria-roledescription="slide" aria-label="3 van 4">
             <a href="https://www.instagram.com/vadolochem/reel/DfCgMoqom9X/" target="_blank" rel="noopener">
               <span class="shot"><img src="ig-leesavond-aankondiging.jpg" alt="Twee cappuccino’s op de menukaart van VADO." width="360" height="640" style="object-position:50% 50%" loading="lazy"><span class="badge"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>Reel</span></span>
               <span class="meta">28 oktober</span>
@@ -385,20 +444,12 @@
               <span class="txt">Neem je eigen boek mee, zoek een fijn plekje en lees een uurtje in alle rust.</span>
             </a>
           </li>
-          <li class="slide" aria-roledescription="slide" aria-label="3 van 4">
+          <li class="slide" aria-roledescription="slide" aria-label="4 van 4">
             <a href="https://www.instagram.com/vadolochem/p/De-E2NUETMT/" target="_blank" rel="noopener">
               <span class="shot"><img src="ig-een-maand-vado.jpg" alt="Twee mensen van VADO zitten op een bankje voor de zaak aan de Oosterwal." width="480" height="640" style="object-position:50% 35%" loading="lazy"></span>
               <span class="meta">26 oktober</span>
               <strong>Eén maand VADO</strong>
               <span class="txt">Heel veel koffie, een zonnige opening, besloten feestjes en een mega pan paella. Dankjulliewel!</span>
-            </a>
-          </li>
-          <li class="slide" aria-roledescription="slide" aria-label="4 van 4">
-            <a href="https://www.instagram.com/p/Dd3ZcYXsTUj/" target="_blank" rel="noopener">
-              <span class="shot"><img src="vado-opening.jpg" alt="Een boeket bloemen van Landstad Lochem LOV voor de opening van VADO, in de zaak aan de Oosterwal." width="900" height="1084" style="object-position:50% 30%" loading="lazy"></span>
-              <span class="meta">29 september</span>
-              <strong>Bedankt, Lochem!</strong>
-              <span class="txt">Landstad Lochem LOV kwam langs met een bloemetje voor onze opening.</span>
             </a>
           </li>
       </ul>
@@ -408,17 +459,41 @@
       </div>
     </aside>
   </main>
-  <dialog class="week-dialog" id="weekmenu" aria-labelledby="h-week" data-tot="2026-11-21T23:00:00+01:00">
+  <dialog class="week-dialog" id="weekmenu" aria-labelledby="h-week" data-tot="2026-11-28T23:00:00+01:00">
     <div class="week-blob" aria-hidden="true"></div>
       <section class="week" aria-labelledby="h-week">
-        <div class="week-head"><svg viewBox="0 0 380 186" fill="currentColor" aria-hidden="true"><use href="#vado-pattern"/></svg><h2 id="h-week">Weekmenu</h2><p class="week-range">19 – 21 november</p><button type="button" class="week-close" aria-label="Weekmenu sluiten" autofocus><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+        <div class="week-head"><svg viewBox="0 0 380 186" fill="currentColor" aria-hidden="true"><use href="#vado-pattern"/></svg><h2 id="h-week">Weekmenu</h2><p class="week-range">26 – 28 november</p><button type="button" class="week-close" aria-label="Weekmenu sluiten" autofocus><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
         <ol>
-          <li><p class="dag">Donderdag<time datetime="2026-11-19">19 nov</time></p><div><h3>Pompoen-aardappelstamppot</h3><p class="oms">Met varkenssaucijs</p></div></li>
-          <li><p class="dag">Vrijdag<time datetime="2026-11-20">20 nov</time></p><div><h3>Moqueca</h3><p class="oms">Braziliaanse visstoof</p></div></li>
-          <li><p class="dag">Zaterdag<time datetime="2026-11-21">21 nov</time></p><div><h3>Argentijnse biefstukpuntjes</h3><p class="oms">Met chimichurri</p></div></li>
+          <li><p class="dag">Donderdag<time datetime="2026-11-26">26 nov</time></p><div><h3>Longhaas</h3><p class="oms">Aardappel-knolselderijpuree, geroosterde wortelen</p></div></li>
+          <li><p class="dag">Vrijdag<time datetime="2026-11-27">27 nov</time></p><div><h3>Bacalhau à Gomes de Sá</h3><p class="oms">Traditionele Portugese ovenschotel</p></div></li>
+          <li><p class="dag">Zaterdag<time datetime="2026-11-28">28 nov</time></p><div><h3>Spaanse varkenskoontjes</h3><p class="oms">Geroosterde aardappel en zoete aardappel, rode kool met appel</p></div></li>
         </ol>
         <p class="week-reserve">Reserveren kan via <a href="mailto:info@vadolochem.nl">info@vadolochem.nl</a> of <a href="tel:+31573785287">0573 - 78 52 87</a></p>
       </section>
+  </dialog>
+  <!-- Wijn-spijs beleving pop-up. Verschijnt automatisch tot data-tot, één keer per bezoeker.
+       data-klaar="nee" zet hem uit. Testen: vadolochem.nl/#wijn-spijs -->
+  <dialog class="promo" id="wijn-spijs" aria-labelledby="h-wijn" data-tot="2026-11-29T17:00:00+01:00" data-klaar="ja">
+    <div class="promo-card" tabindex="-1">
+      <svg class="mark" viewBox="0 0 380 186" fill="currentColor" aria-hidden="true"><use href="#vado-pattern"/></svg>
+      <button type="button" class="promo-close" aria-label="Sluiten"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <p class="eyebrow">Meer dan een goed glas wijn</p>
+      <h2 id="h-wijn">Wijn-spijs beleving</h2>
+      <p class="when">Zondagmiddag 29 november</p>
+      <p class="lead">Een middag vol mooie wijnen, verrassende smaken en goede verhalen. Ontdek hoe een klein gerechtje je wijn ineens heel anders laat proeven.</p>
+      <ul class="promo-list promo-check">
+        <li>Ontvangst met bubbels</li>
+        <li>Proeverij van 8 wijnen, met uitleg over smaak, herkomst en verhalen</li>
+        <li>3 luxe bijpassende hapjes</li>
+        <li>Na afloop (rond 17.00 uur) kun je blijven eten: de VADO-daghap, met een fles van je favoriete wijn van die middag</li>
+      </ul>
+      <p class="promo-note">Met wijnkenners Anne en Willem: Anne vertelt je wat je proeft, Willem kent het verhaal erachter.</p>
+      <p class="promo-note">Aanmelden via <a href="mailto:info@vadolochem.nl?subject=Aanmelding%20wijn-spijs%20beleving%2029%20november">info@vadolochem.nl</a> of <a href="tel:+31573785287">0573 - 78 52 87</a></p>
+      <div class="promo-actions">
+        <a class="btn" href="mailto:info@vadolochem.nl?subject=Aanmelding%20wijn-spijs%20beleving%2029%20november">Meld je aan</a>
+        <button type="button" class="promo-later">Nee, dank je</button>
+      </div>
+    </div>
   </dialog>
   <footer class="site-foot">
     <ul class="contact contact--row">
@@ -533,7 +608,7 @@
       if (!dlg || !btn) return;
       /* Verlopen weekmenu (na zaterdag 23:00) niet meer tonen */
       var tot = Date.parse(dlg.getAttribute('data-tot') || '');
-      if (tot && Date.now() > tot) { btn.hidden = true; return; }
+      if (tot && Date.now() > tot) btn.hidden = true;
       if (typeof dlg.showModal !== 'function') { btn.hidden = true; return; }
       var week = dlg.querySelector('.week'), blob = dlg.querySelector('.week-blob');
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -609,7 +684,86 @@
       dlg.querySelector('.week-close').addEventListener('click', hide);
       dlg.addEventListener('cancel', function (e) { e.preventDefault(); hide(); });
       dlg.addEventListener('click', function (e) { if (e.target === dlg) hide(); });
-      if (location.hash === '#weekmenu') show();
+      if (location.hash === '#weekmenu' && !btn.hidden) show();
+
+      /* Bijwerken met het gepubliceerde weekmenu uit beheer (null = geen menu: knop verbergen) */
+      window.vadoWeekmenu = function (info) {
+        if (dlg.open) return;
+        /* Geen menu in beheer: vaste inhoud houden (verloopt zelf via data-tot) */
+        if (!info) return;
+        /* Ouder menu uit beheer dan wat hier al staat? Dan de vaste inhoud houden. */
+        if (Date.parse(info.tot) < Date.parse(dlg.getAttribute('data-tot') || '')) return;
+        var el = window.__vadoEl, ol = week.querySelector('ol'); ol.textContent = '';
+        info.items.forEach(function (g) {
+          var li = el('li'), dag = el('p', 'dag', g.naam), t = el('time', null, g.kort), div = el('div');
+          t.dateTime = g.iso; dag.appendChild(t); div.appendChild(el('h3', null, g.titel));
+          if (g.ondertitel) div.appendChild(el('p', 'oms', g.ondertitel));
+          li.appendChild(dag); li.appendChild(div); ol.appendChild(li);
+        });
+        var r = week.querySelector('.week-range'), L = window.__vadoLang;
+        r.textContent = info.d.getUTCMonth() === info.z.getUTCMonth() ? info.d.getUTCDate() + ' – ' + L.format(info.z) : L.format(info.d) + ' – ' + L.format(info.z);
+        dlg.setAttribute('data-tot', info.tot);
+        btn.hidden = Date.now() > Date.parse(info.tot);
+        if (location.hash === '#weekmenu' && !btn.hidden) show();
+      };
+    })();
+  </script>
+  <script>
+    /* Wijn-spijs pop-up: 2,5 s na laden, één keer per bezoeker. Na data-tot of met data-klaar="nee" niet tonen.
+       Sluiten met kruisje, "Nee, dank je", Esc of klik naast de kaart. vadolochem.nl/#wijn-spijs opent hem altijd. */
+    (function () {
+      var dlg = document.getElementById('wijn-spijs');
+      if (!dlg || typeof dlg.showModal !== 'function') return;
+      var KEY = 'vado-promo-' + dlg.id + '-' + (dlg.getAttribute('data-tot') || '');
+      var forced = location.hash === '#' + dlg.id;
+      var tot = Date.parse(dlg.getAttribute('data-tot') || '');
+      function seen() { try { return localStorage.getItem(KEY) === '1'; } catch (e) { return false; } }
+      function remember() { try { localStorage.setItem(KEY, '1'); } catch (e) {} }
+      function show() {
+        if (dlg.open) return;
+        if (document.querySelector('.week-dialog[open]')) return;
+        dlg.showModal();
+        dlg.querySelector('.promo-card').focus({ preventScroll: true });
+        requestAnimationFrame(function () { requestAnimationFrame(function () { dlg.classList.add('is-in'); }); });
+      }
+      function hide() {
+        if (!dlg.open) return;
+        remember();
+        dlg.classList.remove('is-in');
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        setTimeout(function () { dlg.close(); }, reduce ? 0 : 380);
+      }
+      dlg.querySelector('.promo-close').addEventListener('click', hide);
+      dlg.querySelector('.promo-later').addEventListener('click', hide);
+      dlg.querySelector('.btn').addEventListener('click', remember);
+      dlg.addEventListener('cancel', function (e) { e.preventDefault(); hide(); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) hide(); });
+      if (forced) { show(); return; }
+      if (dlg.getAttribute('data-klaar') !== 'ja' || (tot && Date.now() > tot) || seen()) return;
+      setTimeout(show, 2500);
+    })();
+  </script>
+  <script>
+    /* Weekmenu live uit beheer.vadolochem.nl. Lukt ophalen niet, dan blijft de vaste inhoud hierboven staan.
+       Alleen-lezen: de publishable key mag publiek zijn, de database staat alleen het gepubliceerde menu toe. */
+    (function () {
+      var SB_URL = 'https://ccjrklmfrtekjmhhnmga.supabase.co', SB_KEY = 'sb_publishable_3bBR3cDbTH2seUI99XouNA__NK7FrxP';
+      if (SB_URL.indexOf('PROJECT_REF') > -1 || !window.fetch) return;
+      var DAG = { 4: 'Donderdag', 5: 'Vrijdag', 6: 'Zaterdag' };
+      var kort = new Intl.DateTimeFormat('nl-NL', { timeZone: 'UTC', day: 'numeric', month: 'short' });
+      var lang = new Intl.DateTimeFormat('nl-NL', { timeZone: 'UTC', day: 'numeric', month: 'long' });
+      function datum(maandag, dag) { var a = maandag.split('-'); return new Date(Date.UTC(+a[0], +a[1] - 1, +a[2] + dag - 1)); }
+      function el(tag, cls, tekst) { var e = document.createElement(tag); if (cls) e.className = cls; if (tekst != null) e.textContent = tekst; return e; }
+      fetch(SB_URL + '/rest/v1/rpc/publiek_weekmenu', { method: 'POST', headers: { apikey: SB_KEY, 'Content-Type': 'application/json' }, body: '{}', cache: 'no-store' })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (m) {
+          var ok = m && m.gerechten && m.gerechten.length === 3;
+          var info = ok ? { tot: m.tot, d: datum(m.week_start, 4), z: datum(m.week_start, 6),
+                            items: m.gerechten.map(function (g) { var d = datum(m.week_start, g.dag); return { naam: DAG[g.dag], iso: d.toISOString().slice(0, 10), kort: kort.format(d).replace('.', ''), titel: String(g.titel || ''), ondertitel: g.ondertitel ? String(g.ondertitel) : '' }; }) } : null;
+          window.vadoWeekmenu && window.vadoWeekmenu(info);
+        })
+        .catch(function () { /* vaste inhoud blijft staan */ });
+      window.__vadoEl = el; window.__vadoLang = lang;
     })();
   </script>
 </body>
